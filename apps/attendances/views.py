@@ -1,6 +1,7 @@
 import calendar
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.utils.timezone import now
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -8,12 +9,23 @@ from rest_framework.response import Response
 from config.settings.permissions import IsTeacherAndOwnGroup
 
 from apps.attendances.serializers import Attendance, AttendanceSerializer
+from apps.users.models import CustomUser
 
 
 class AttendanceListCreateAPIView(APIView):
     permission_classes = [IsAdminUser]
 
     def post(self, request):
+        if request.user.role == CustomUser.RoleChoices.TEACHER:
+            if not request.data['student']:
+                return Response({'student': 'This field is required'})
+
+            group = request.user.teacher_group.first()
+            student = get_object_or_404(get_user_model(), id=request.data['student'])
+            if not student in group.students.all():
+                return Response({'student': 'You don`t have permission for this group'})
+
+        request.data['date'] = now().date()
         serializer = AttendanceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -53,6 +65,9 @@ class AttendanceListCreateAPIView(APIView):
                     student['attendances'].append(obj)
         else:
             context['students'] = []
+
+        if request.user.role == CustomUser.RoleChoices.TEACHER and group_id.isdigit() and int(group_id) != request.user.teacher_group.first().id:
+            return Response({'message': 'You have not permission for this group'})
 
         return Response(context, status=200)
 

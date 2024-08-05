@@ -87,6 +87,9 @@ local_settings.py
 
 apps/*/migrations/0*
 
+Pipfile
+Pipfile.lock
+
 media
 database.py/
 .env

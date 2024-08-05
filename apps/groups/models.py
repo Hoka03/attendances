@@ -6,7 +6,8 @@ from apps.users.models import CustomUser
 
 class StudentGroup(models.Model):
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
-                                limit_choices_to={'role': CustomUser.RoleChoices.TEACHER.value})
+                                limit_choices_to={'role': CustomUser.RoleChoices.TEACHER.value},
+                                related_name='teacher_group')
     name = models.CharField(max_length=120)
     slug = models.SlugField(max_length=120, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
