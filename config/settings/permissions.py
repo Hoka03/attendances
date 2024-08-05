@@ -8,3 +8,4 @@ class IsTeacherAndOwnGroup(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.student.student_group.teacher == request.user
+

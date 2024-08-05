@@ -33,6 +33,7 @@ class AttendanceCreateAPIView(APIView):
 
 
 class AttendanceListAPIView(APIView):
+    permission_classes = [IsAdminUser | IsTeacherAndOwnGroup]
 
     def get(self, request):
         context = {}
