@@ -1,11 +1,12 @@
 from django.urls import path
 
-from apps.groups.views import StudentGroupListCreateAPIView, StudentGroupUpdateAPIView, StudentGroupDeleteAPIView
+from apps.groups.views import (StudentGroupCreateAPIView, StudentGroupListAPIView, StudentGroupUpdateAPIView,
+                               StudentGroupDeleteAPIView)
 
 
 urlpatterns = [
-    path('', StudentGroupListCreateAPIView.as_view()),
-    path('<int:pk>/', StudentGroupListCreateAPIView.as_view()),
+    path('', StudentGroupCreateAPIView.as_view()),
+    path('<int:pk>/', StudentGroupListAPIView.as_view()),
     # ==================== UPDATE ==================
     path('update/<int:pk>/', StudentGroupUpdateAPIView.as_view()),
     # ==================== DELETE =====================

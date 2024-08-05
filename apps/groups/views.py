@@ -8,7 +8,7 @@ from apps.groups.models import StudentGroup
 from apps.groups.serializers import StudentGroupSerializer
 
 
-class StudentGroupListCreateAPIView(APIView):
+class StudentGroupCreateAPIView(APIView):
     permission_classes = [IsAdminUser]
 
     def post(self, request):
@@ -25,6 +25,14 @@ class StudentGroupListCreateAPIView(APIView):
     def get(self, request):
         groups = StudentGroup.objects.all().order_by('-id')
         many = True
+        serializer = StudentGroupSerializer(groups, many=many)
+        return Response(serializer.data, status=200)
+
+
+class StudentGroupListAPIView(APIView):
+    def get(self, request, pk):
+        groups = get_object_or_404(StudentGroup, pk=pk)
+        many = False
         serializer = StudentGroupSerializer(groups, many=many)
         return Response(serializer.data, status=200)
 

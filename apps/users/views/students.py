@@ -8,10 +8,11 @@ from apps.users.serializers import StudentSerializer
 from apps.users.models import CustomUser
 
 
-class StudentListCreateAPIView(APIView):
+class StudentCreateAPIView(APIView):
     permission_classes = [IsAdminUser]
 
     def post(self, request):
+        request.data['role'] = 3
         serializer = StudentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         if CustomUser.objects.filter(email=request.data['email']).exists():
@@ -21,8 +22,16 @@ class StudentListCreateAPIView(APIView):
         return Response(serializer.data, status=201)
 
     def get(self, request):
-        students = CustomUser.objects.all().order_by('-id')
+        students = CustomUser.objects.filter(role=CustomUser.RoleChoices.STUDENT).order_by('-id')
         many = True
+        serializer = StudentSerializer(students, many=many)
+        return Response(serializer.data, status=200)
+
+
+class StudentListAPIView(APIView):
+    def get(self, request, pk):
+        students = get_object_or_404(CustomUser, pk=pk)
+        many = False
         serializer = StudentSerializer(students, many=many)
         return Response(serializer.data, status=200)
 

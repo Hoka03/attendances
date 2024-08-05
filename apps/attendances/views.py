@@ -12,7 +12,7 @@ from apps.attendances.serializers import Attendance, AttendanceSerializer
 from apps.users.models import CustomUser
 
 
-class AttendanceListCreateAPIView(APIView):
+class AttendanceCreateAPIView(APIView):
     permission_classes = [IsAdminUser]
 
     def post(self, request):
@@ -30,6 +30,9 @@ class AttendanceListCreateAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=201)
+
+
+class AttendanceListAPIView(APIView):
 
     def get(self, request):
         context = {}

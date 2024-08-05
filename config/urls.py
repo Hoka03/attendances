@@ -7,6 +7,7 @@ from .yasg import schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('rest_api/', include('rest_framework.urls')),
     path('api/v1/users/', include('apps.users.urls')),
     path('api/v1/groups/', include('apps.groups.urls')),
     path('api/v1/attendances/', include('apps.attendances.urls')),
